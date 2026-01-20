@@ -108,6 +108,10 @@ const ChatWidget = () => {
       chats[existingChatIndex].messages.push(newMessage);
       chats[existingChatIndex].lastMessage = new Date();
     } else {
+      if (chats.length >= 5000) {
+        chats.sort((a, b) => new Date(b.lastMessage).getTime() - new Date(a.lastMessage).getTime());
+        chats.pop();
+      }
       chats.push({
         userId: userId,
         messages: [newMessage],
