@@ -17,6 +17,7 @@ interface Chat {
   messages: Message[];
   lastMessage: Date;
   userName?: string;
+  unread?: boolean;
 }
 
 const Admin = () => {
@@ -53,11 +54,14 @@ const Admin = () => {
     const storedChats = localStorage.getItem('admin_chats');
     if (storedChats) {
       const parsedChats = JSON.parse(storedChats);
+      const readChats = JSON.parse(localStorage.getItem('admin_read_chats') || '[]');
+      
       parsedChats.forEach((chat: Chat) => {
         chat.messages.forEach((msg: Message) => {
           msg.timestamp = new Date(msg.timestamp);
         });
         chat.lastMessage = new Date(chat.lastMessage);
+        chat.unread = !readChats.includes(chat.userId);
       });
       setChats(parsedChats);
     }
@@ -142,6 +146,26 @@ const Admin = () => {
     setNewName('');
   };
 
+  const handleSelectChat = (userId: string) => {
+    setSelectedChat(userId);
+    const readChats = JSON.parse(localStorage.getItem('admin_read_chats') || '[]');
+    if (!readChats.includes(userId)) {
+      readChats.push(userId);
+      localStorage.setItem('admin_read_chats', JSON.stringify(readChats));
+    }
+    loadChats();
+  };
+
+  const handleMarkAllRead = () => {
+    const allUserIds = chats.map(chat => chat.userId);
+    localStorage.setItem('admin_read_chats', JSON.stringify(allUserIds));
+    localStorage.setItem('admin_unread_count', '0');
+    setUnreadCount(0);
+    loadChats();
+  };
+
+  const unreadChats = chats.filter(chat => chat.unread);
+
   const selectedChatData = chats.find(chat => chat.userId === selectedChat);
 
   if (!isAuthenticated) {
@@ -182,15 +206,27 @@ const Admin = () => {
             )}
           </div>
           <div className="flex gap-4 items-center">
+            {unreadChats.length > 0 && (
+              <Button 
+                onClick={() => {
+                  if (unreadChats.length > 0) {
+                    handleSelectChat(unreadChats[0].userId);
+                  }
+                }}
+                variant="default"
+                size="sm"
+                className="bg-primary hover:bg-primary/90"
+              >
+                <Icon name="Mail" size={16} className="mr-2" />
+                Новые сообщения ({unreadChats.length})
+              </Button>
+            )}
             <Button 
-              onClick={() => {
-                localStorage.setItem('admin_unread_count', '0');
-                setUnreadCount(0);
-              }}
+              onClick={handleMarkAllRead}
               variant="outline"
               size="sm"
             >
-              Отметить прочитанным
+              Отметить все прочитанными
             </Button>
             <a href="/" className="text-primary hover:underline">На главную</a>
             <Button onClick={handleLogout} variant="outline">
@@ -212,14 +248,22 @@ const Admin = () => {
                 {chats.map((chat) => (
                   <button
                     key={chat.userId}
-                    onClick={() => setSelectedChat(chat.userId)}
-                    className={`w-full text-left p-4 rounded-lg border transition-colors ${
+                    onClick={() => handleSelectChat(chat.userId)}
+                    className={`w-full text-left p-4 rounded-lg border transition-colors relative ${
                       selectedChat === chat.userId
                         ? 'bg-primary text-white border-primary'
+                        : chat.unread
+                        ? 'bg-blue-50 hover:bg-blue-100 border-blue-300 border-2'
                         : 'bg-white hover:bg-slate-50 border-slate-200'
                     }`}
                   >
-                    <div className="font-semibold">{chat.userName || `Пользователь ${chat.userId.slice(0, 8)}`}</div>
+                    {chat.unread && (
+                      <div className="absolute top-2 right-2 w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                    )}
+                    <div className="font-semibold flex items-center gap-2">
+                      {chat.unread && <Icon name="Mail" size={16} className="text-primary" />}
+                      {chat.userName || `Пользователь ${chat.userId.slice(0, 8)}`}
+                    </div>
                     <div className="text-sm opacity-75">
                       {chat.messages[chat.messages.length - 1]?.text.slice(0, 50)}...
                     </div>
