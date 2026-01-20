@@ -24,6 +24,8 @@ const ChatWidget = () => {
     { text: 'Здравствуйте! Чем могу помочь?', isBot: true }
   ]);
   const [inputValue, setInputValue] = useState('');
+  const [lastUserMessageTime, setLastUserMessageTime] = useState<number | null>(null);
+  const [autoReplyShown, setAutoReplyShown] = useState(false);
   const [userId] = useState(() => {
     let id = localStorage.getItem('chat_user_id');
     if (!id) {
@@ -44,6 +46,7 @@ const ChatWidget = () => {
         adminMessages.forEach((adminMsg: Message) => {
           if (!messages.some(m => m.text === adminMsg.text && m.isBot)) {
             setMessages(prev => [...prev, { text: adminMsg.text, isBot: true }]);
+            setAutoReplyShown(false);
           }
         });
       }
@@ -52,12 +55,43 @@ const ChatWidget = () => {
     return () => clearInterval(interval);
   }, [userId, messages]);
 
+  useEffect(() => {
+    if (!lastUserMessageTime || autoReplyShown) return;
+
+    const timeout = setTimeout(() => {
+      const chats = JSON.parse(localStorage.getItem('admin_chats') || '[]');
+      const myChat = chats.find((chat: Chat) => chat.userId === userId);
+      
+      if (myChat) {
+        const adminMessages = myChat.messages.filter((msg: Message) => msg.from === 'admin');
+        const lastAdminMsg = adminMessages[adminMessages.length - 1];
+        const timeSinceLastUserMsg = Date.now() - lastUserMessageTime;
+        
+        if (!lastAdminMsg || new Date(lastAdminMsg.timestamp).getTime() < lastUserMessageTime) {
+          if (timeSinceLastUserMsg >= 30000) {
+            setMessages(prev => [...prev, {
+              text: 'Спасибо за обращение! Мы свяжемся с вами в течение рабочего дня. Для более быстрой связи звоните по телефону: +8 (902) 145-49-42',
+              isBot: true
+            }]);
+            setAutoReplyShown(true);
+          }
+        }
+      }
+    }, 30000);
+
+    return () => clearTimeout(timeout);
+  }, [lastUserMessageTime, autoReplyShown, userId]);
+
   const handleSend = () => {
     if (!inputValue.trim()) return;
 
     const userMessage = { text: inputValue, isBot: false };
     setMessages([...messages, userMessage]);
     setInputValue('');
+
+    const now = Date.now();
+    setLastUserMessageTime(now);
+    setAutoReplyShown(false);
 
     const newMessage: Message = {
       id: Date.now().toString(),
