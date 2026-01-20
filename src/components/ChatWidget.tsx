@@ -85,13 +85,6 @@ const ChatWidget = () => {
     const unreadCount = parseInt(localStorage.getItem('admin_unread_count') || '0');
     localStorage.setItem('admin_unread_count', (unreadCount + 1).toString());
     localStorage.setItem('admin_new_message', Date.now().toString());
-
-    setTimeout(() => {
-      setMessages(prev => [...prev, {
-        text: 'Спасибо за обращение! Мы свяжемся с вами в течение рабочего дня. Для более быстрой связи звоните по телефону: +8 (902) 145-49-42',
-        isBot: true
-      }]);
-    }, 1000);
   };
 
   return (
