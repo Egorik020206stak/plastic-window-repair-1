@@ -13,7 +13,7 @@ const Index = () => {
     {
       icon: 'Home',
       title: 'Установка окон',
-      description: 'Профессиональная установка пластиковых окон с гарантией до 5 лет',
+      description: 'Профессиональная установка пластиковых окон',
     },
     {
       icon: 'Wrench',
@@ -29,7 +29,7 @@ const Index = () => {
 
   const products = [
     {
-      name: 'Краски «Саяночки»',
+      name: 'Краски «Саяночка»',
       price: 'Уточняйте цену',
       description: 'Качественные краски для различных поверхностей',
     },
@@ -39,25 +39,22 @@ const Index = () => {
     {
       image: 'https://cdn.poehali.dev/projects/91022207-6de8-4436-b8df-267fcf1224c7/files/8dad1c72-f4b8-4e8b-afe7-05a32c62919f.jpg',
       title: 'Установка окон в частном доме',
-      description: 'Комплексная замена всех окон с гарантией',
+      description: 'Комплексная замена всех окон',
     },
     {
       image: 'https://cdn.poehali.dev/projects/91022207-6de8-4436-b8df-267fcf1224c7/files/3a84a3b6-2122-4f5a-b65c-0025fb29479c.jpg',
-      title: 'Ремонт и покраска окон',
+      title: 'Ремонт окон',
       description: 'Восстановление эстетического вида окон',
     },
     {
       image: 'https://cdn.poehali.dev/projects/91022207-6de8-4436-b8df-267fcf1224c7/files/55796747-f555-43c5-83af-fe1b84e6f09d.jpg',
-      title: 'Профессиональная покраска',
-      description: 'Качественные материалы и долговечный результат',
+      title: 'Качественные материалы',
+      description: 'Профессиональные краски и долговечный результат',
     },
   ];
 
   const faqs = [
-    {
-      question: 'Какая гарантия на установку окон?',
-      answer: 'Мы предоставляем гарантию до 5 лет на все виды работ по установке и замене пластиковых окон.',
-    },
+
     {
       question: 'Сколько времени занимает установка одного окна?',
       answer: 'В среднем установка одного стандартного окна занимает 2-3 часа с учетом подготовки и уборки.',
@@ -67,8 +64,8 @@ const Index = () => {
       answer: 'Мы работаем только с профессиональными красками для ПВХ и дерева ведущих европейских производителей.',
     },
     {
-      question: 'Выезжаете ли вы на замер бесплатно?',
-      answer: 'Да, выезд замерщика в пределах города абсолютно бесплатный.',
+      question: 'Сколько стоит выезд на замер?',
+      answer: 'Выезд замерщика по городу — 200 рублей, загород — от 500 рублей.',
     },
   ];
 
@@ -97,10 +94,12 @@ const Index = () => {
               <a href="#faq" className="hover:text-primary transition-colors">FAQ</a>
               <a href="#contacts" className="hover:text-primary transition-colors">Контакты</a>
             </div>
-            <Button className="bg-secondary hover:bg-secondary/90">
-              <Icon name="Phone" size={18} className="mr-2" />
-              Позвонить
-            </Button>
+            <a href="tel:+79501307721">
+              <Button className="bg-secondary hover:bg-secondary/90">
+                <Icon name="Phone" size={18} className="mr-2" />
+                Позвонить
+              </Button>
+            </a>
           </nav>
         </div>
       </header>
@@ -122,26 +121,20 @@ const Index = () => {
               Пластиковые окна, краска и строительные работы
             </p>
             <p className="text-xl mb-10 text-slate-200 animate-slide-up">
-              Профессиональная установка окон, качественные материалы и опытные мастера с гарантией до 5 лет
+              Профессиональная установка и ремонт пластиковых окон с 2021 года
             </p>
             <div className="flex flex-wrap gap-4 justify-center animate-slide-up">
               <Button size="lg" className="bg-primary hover:bg-primary/90 text-lg px-8">
                 Заказать замер
               </Button>
-              <Button size="lg" variant="secondary" className="text-lg px-8">
-                <Icon name="Calculator" size={20} className="mr-2" />
-                Рассчитать стоимость
-              </Button>
+
             </div>
             <div className="flex flex-wrap gap-8 justify-center pt-12">
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 min-w-[140px]">
                 <div className="text-4xl font-bold">500+</div>
                 <div className="text-sm text-slate-200">Довольных клиентов</div>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 min-w-[140px]">
-                <div className="text-4xl font-bold">5 лет</div>
-                <div className="text-sm text-slate-200">Гарантия на работы</div>
-              </div>
+
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 min-w-[140px]">
                 <div className="text-4xl font-bold">24/7</div>
                 <div className="text-sm text-slate-200">Поддержка клиентов</div>
@@ -184,7 +177,7 @@ const Index = () => {
       <section id="products" className="py-20 bg-slate-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold mb-4">Товары для окон</h2>
+            <h2 className="text-4xl font-bold mb-4">Краска Саяночка</h2>
             <p className="text-xl text-muted-foreground">Профессиональные материалы для окон</p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
@@ -244,14 +237,12 @@ const Index = () => {
             <div className="text-center mb-12">
               <h2 className="text-4xl font-bold mb-6">О нас</h2>
               <p className="text-xl text-muted-foreground mb-4">
-                ООО "Эридан" — это динамично развивающаяся компания, которая занимается предоставлением высококачественных услуг и товаров для разнообразных организаций.
+                Наша основная миссия заключается в том, чтобы создавать комфортные и безопасные условия для работы реализуя проекты как для частных клиентов, так и для муниципальных учреждений.
               </p>
             </div>
             
             <div className="prose prose-lg max-w-none mb-12 text-left">
-              <p className="text-base text-muted-foreground leading-relaxed mb-6">
-                Наша основная миссия заключается в том, чтобы создавать комфортные и безопасные условия для работы и обучения, реализуя проекты как для частных клиентов, так и для муниципальных учреждений.
-              </p>
+
               
               <h3 className="text-2xl font-bold mb-4 text-foreground">Наши услуги</h3>
               <p className="text-base text-muted-foreground mb-4">Мы работаем с:</p>
@@ -324,7 +315,7 @@ const Index = () => {
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
               <h2 className="text-4xl font-bold mb-4">Свяжитесь с нами</h2>
-              <p className="text-xl text-muted-foreground">Оставьте заявку и мы перезвоним в течение 15 минут</p>
+              <p className="text-xl text-muted-foreground">Оставьте заявку и мы перезвоним в течение рабочего времени</p>
             </div>
             <div className="grid md:grid-cols-2 gap-8">
               <Card className="p-6">
@@ -369,6 +360,7 @@ const Index = () => {
                     </div>
                     <div>
                       <h3 className="font-bold text-lg mb-1">Телефон</h3>
+                      <p className="text-muted-foreground">+7 950 130 7721</p>
                       <p className="text-muted-foreground">8 (902) 145-49-42 Офис</p>
                       <p className="text-muted-foreground">8 (908) 654-95-25 Директор</p>
                     </div>
@@ -394,7 +386,7 @@ const Index = () => {
                       <h3 className="font-bold text-lg mb-1">Адрес</h3>
                       <p className="text-muted-foreground">Иркутская область</p>
                       <p className="text-muted-foreground">г. Саянск, мкр Олимпийский, дом 18</p>
-                      <p className="text-muted-foreground">Пн-Вс: 9:00 - 21:00</p>
+                      <p className="text-muted-foreground">Пн-Сб: 9:00 - 18:00</p>
                     </div>
                   </div>
                 </Card>
