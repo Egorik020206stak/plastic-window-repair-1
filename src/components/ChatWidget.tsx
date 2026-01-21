@@ -21,7 +21,7 @@ interface Chat {
 const ChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { text: 'Здравствуйте! Чем могу помочь?', isBot: true }
+    { text: 'Здравствуйте! Наш офис работает с понедельника по пятницу с 9:00 до 17:00. Чем могу помочь?', isBot: true }
   ]);
   const [inputValue, setInputValue] = useState('');
   const [lastUserMessageTime, setLastUserMessageTime] = useState<number | null>(null);

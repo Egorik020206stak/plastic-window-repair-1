@@ -6,6 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import Icon from '@/components/ui/icon';
 import ChatWidget from '@/components/ChatWidget';
+import { Link } from 'react-router-dom';
 
 const Index = () => {
   const [formData, setFormData] = useState({ name: '', phone: '', message: '' });
@@ -16,11 +17,18 @@ const Index = () => {
       icon: 'Home',
       title: 'Установка окон',
       description: 'Профессиональная установка пластиковых окон',
+      link: '/gallery'
     },
     {
       icon: 'Wrench',
       title: 'Замена окон',
       description: 'Быстрая и качественная замена старых окон на новые',
+    },
+    {
+      icon: 'Settings',
+      title: 'Ремонт окон',
+      description: 'Замена фурнитуры, изготовление и замена стеклопакетов',
+      link: '/window-repair'
     },
   ];
 
@@ -50,14 +58,16 @@ const Index = () => {
   const portfolio = [
     {
       image: 'https://cdn.poehali.dev/projects/91022207-6de8-4436-b8df-267fcf1224c7/files/8dad1c72-f4b8-4e8b-afe7-05a32c62919f.jpg',
-      title: 'Установка окон в частном доме',
+      title: 'Установка окон',
       description: 'Комплексная замена всех окон',
+      link: '/gallery'
     },
 
     {
       image: 'https://cdn.poehali.dev/projects/91022207-6de8-4436-b8df-267fcf1224c7/files/55796747-f555-43c5-83af-fe1b84e6f09d.jpg',
       title: 'Качественные материалы',
       description: 'Профессиональные краски и долговечный результат',
+      link: '/materials'
     },
   ];
 
@@ -77,11 +87,27 @@ const Index = () => {
     },
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    alert('Спасибо! Мы свяжемся с вами в ближайшее время.');
-    setFormData({ name: '', phone: '', message: '' });
+    
+    try {
+      const response = await fetch('https://functions.poehali.dev/54a6bf39-e828-4dbd-ae32-04dc56bdbaa8', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...formData, type: 'contact' })
+      });
+      
+      const result = await response.json();
+      
+      if (response.ok) {
+        alert('Спасибо! Ваша заявка отправлена. Мы свяжемся с вами в ближайшее время.');
+        setFormData({ name: '', phone: '', message: '' });
+      } else {
+        alert('Ошибка отправки: ' + (result.error || 'Попробуйте позже'));
+      }
+    } catch (error) {
+      alert('Ошибка отправки заявки. Позвоните нам: +7 (902) 145-49-42');
+    }
   };
 
   return (
@@ -102,12 +128,10 @@ const Index = () => {
               <a href="#faq" className="hover:text-primary transition-colors">FAQ</a>
               <a href="#contacts" className="hover:text-primary transition-colors">Контакты</a>
             </div>
-            <a href="tel:+79501307721">
-              <Button className="bg-secondary hover:bg-secondary/90">
-                <Icon name="Phone" size={18} className="mr-2" />
-                Позвонить
-              </Button>
-            </a>
+            <Button className="bg-secondary hover:bg-secondary/90" onClick={() => alert('📞 Позвонить нам:\n\n+7 (902) 145-49-42\nАнастасия\nОфис')}>
+              <Icon name="Phone" size={18} className="mr-2" />
+              Позвонить
+            </Button>
           </nav>
         </div>
       </header>
@@ -174,10 +198,19 @@ const Index = () => {
                   <CardDescription className="text-base">{service.description}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Button variant="outline" className="w-full">
-                    Подробнее
-                    <Icon name="ArrowRight" size={18} className="ml-2" />
-                  </Button>
+                  {service.link ? (
+                    <Link to={service.link}>
+                      <Button variant="outline" className="w-full">
+                        Подробнее
+                        <Icon name="ArrowRight" size={18} className="ml-2" />
+                      </Button>
+                    </Link>
+                  ) : (
+                    <Button variant="outline" className="w-full">
+                      Подробнее
+                      <Icon name="ArrowRight" size={18} className="ml-2" />
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
             ))}
@@ -190,6 +223,12 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold mb-4">Краска Саяночка</h2>
+            <Link to="/paints-catalog">
+              <Button size="lg" className="mt-4">
+                Посмотреть весь каталог
+                <Icon name="ArrowRight" size={18} className="ml-2" />
+              </Button>
+            </Link>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {products.map((product, index) => (
@@ -203,10 +242,12 @@ const Index = () => {
                   <CardDescription>{product.description}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Button className="w-full bg-secondary hover:bg-secondary/90">
-                    <Icon name="CheckCircle" size={18} className="mr-2" />
-                    Выбрать
-                  </Button>
+                  <Link to="/paints-catalog">
+                    <Button className="w-full bg-secondary hover:bg-secondary/90">
+                      <Icon name="CheckCircle" size={18} className="mr-2" />
+                      Выбрать
+                    </Button>
+                  </Link>
                 </CardContent>
               </Card>
             ))}
@@ -221,21 +262,23 @@ const Index = () => {
             <h2 className="text-4xl font-bold mb-4">Наши работы</h2>
             <p className="text-xl text-muted-foreground">Примеры выполненных проектов</p>
           </div>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 gap-8">
             {portfolio.map((item, index) => (
-              <Card key={index} className="overflow-hidden hover:shadow-xl transition-shadow group">
-                <div className="relative overflow-hidden">
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300"
-                  />
-                </div>
-                <CardHeader>
-                  <CardTitle>{item.title}</CardTitle>
-                  <CardDescription>{item.description}</CardDescription>
-                </CardHeader>
-              </Card>
+              <Link key={index} to={item.link}>
+                <Card className="overflow-hidden hover:shadow-xl transition-shadow group cursor-pointer">
+                  <div className="relative overflow-hidden">
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300"
+                    />
+                  </div>
+                  <CardHeader>
+                    <CardTitle>{item.title}</CardTitle>
+                    <CardDescription>{item.description}</CardDescription>
+                  </CardHeader>
+                </Card>
+              </Link>
             ))}
           </div>
         </div>
@@ -395,10 +438,10 @@ const Index = () => {
                       <Icon name="MapPin" className="text-primary" size={24} />
                     </div>
                     <div>
-                      <h3 className="font-bold text-lg mb-1">Адрес</h3>
+                      <h3 className="font-bold text-lg mb-1">Адрес и режим работы</h3>
                       <p className="text-muted-foreground">Иркутская область</p>
                       <p className="text-muted-foreground">г. Саянск, мкр Олимпийский, дом 18</p>
-                      <p className="text-muted-foreground">Пн-Сб: 9:00 - 18:00</p>
+                      <p className="text-muted-foreground font-semibold mt-2">Пн-Пт: 9:00 - 17:00</p>
                     </div>
                   </div>
                 </Card>

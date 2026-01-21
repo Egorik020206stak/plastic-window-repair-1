@@ -2,7 +2,11 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Icon from '@/components/ui/icon';
+import GalleryManager from '@/components/admin/GalleryManager';
+import MaterialsManager from '@/components/admin/MaterialsManager';
+import PaintsManager from '@/components/admin/PaintsManager';
 
 interface Message {
   id: string;
@@ -198,7 +202,7 @@ const Admin = () => {
       <div className="bg-white shadow-sm border-b p-4">
         <div className="container mx-auto flex justify-between items-center">
           <div className="flex items-center gap-4">
-            <h1 className="text-2xl font-bold">Админ-панель - Чаты</h1>
+            <h1 className="text-2xl font-bold">Админ-панель ООО "Эридан"</h1>
             {unreadCount > 0 && (
               <span className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold animate-pulse">
                 {unreadCount} новых
@@ -206,28 +210,6 @@ const Admin = () => {
             )}
           </div>
           <div className="flex gap-4 items-center">
-            {unreadChats.length > 0 && (
-              <Button 
-                onClick={() => {
-                  if (unreadChats.length > 0) {
-                    handleSelectChat(unreadChats[0].userId);
-                  }
-                }}
-                variant="default"
-                size="sm"
-                className="bg-primary hover:bg-primary/90"
-              >
-                <Icon name="Mail" size={16} className="mr-2" />
-                Новые сообщения ({unreadChats.length})
-              </Button>
-            )}
-            <Button 
-              onClick={handleMarkAllRead}
-              variant="outline"
-              size="sm"
-            >
-              Отметить все прочитанными
-            </Button>
             <a href="/" className="text-primary hover:underline">На главную</a>
             <Button onClick={handleLogout} variant="outline">
               <Icon name="LogOut" size={18} className="mr-2" />
@@ -238,6 +220,56 @@ const Admin = () => {
       </div>
 
       <div className="container mx-auto p-4">
+        <Tabs defaultValue="chats" className="w-full">
+          <TabsList className="grid w-full grid-cols-4 mb-6">
+            <TabsTrigger value="chats" className="flex items-center gap-2">
+              <Icon name="MessageSquare" size={16} />
+              Чаты
+              {unreadCount > 0 && (
+                <span className="bg-red-500 text-white text-xs px-2 py-0.5 rounded-full ml-1">
+                  {unreadCount}
+                </span>
+              )}
+            </TabsTrigger>
+            <TabsTrigger value="gallery" className="flex items-center gap-2">
+              <Icon name="Image" size={16} />
+              Галерея работ
+            </TabsTrigger>
+            <TabsTrigger value="materials" className="flex items-center gap-2">
+              <Icon name="Palette" size={16} />
+              Материалы
+            </TabsTrigger>
+            <TabsTrigger value="paints" className="flex items-center gap-2">
+              <Icon name="Paintbrush" size={16} />
+              Каталог красок
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="chats">
+            <div className="flex gap-4 mb-4">
+              {unreadChats.length > 0 && (
+                <Button 
+                  onClick={() => {
+                    if (unreadChats.length > 0) {
+                      handleSelectChat(unreadChats[0].userId);
+                    }
+                  }}
+                  variant="default"
+                  size="sm"
+                  className="bg-primary hover:bg-primary/90"
+                >
+                  <Icon name="Mail" size={16} className="mr-2" />
+                  Новые сообщения ({unreadChats.length})
+                </Button>
+              )}
+              <Button 
+                onClick={handleMarkAllRead}
+                variant="outline"
+                size="sm"
+              >
+                Отметить все прочитанными
+              </Button>
+            </div>
         <div className="grid md:grid-cols-3 gap-4 h-[calc(100vh-120px)]">
           <Card className="p-4 overflow-y-auto">
             <h2 className="text-xl font-bold mb-4">Диалоги ({chats.length})</h2>
@@ -365,6 +397,20 @@ const Admin = () => {
             )}
           </Card>
         </div>
+          </TabsContent>
+
+          <TabsContent value="gallery">
+            <GalleryManager />
+          </TabsContent>
+
+          <TabsContent value="materials">
+            <MaterialsManager />
+          </TabsContent>
+
+          <TabsContent value="paints">
+            <PaintsManager />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
