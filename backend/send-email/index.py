@@ -37,7 +37,8 @@ def handler(event: dict, context) -> dict:
             return {
                 'statusCode': 400,
                 'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-                'body': json.dumps({'error': 'Имя и телефон обязательны'})
+                'body': json.dumps({'error': 'Имя и телефон обязательны'}, ensure_ascii=False),
+                'isBase64Encoded': False
             }
 
         smtp_password = os.environ.get('SMTP_PASSWORD')
@@ -45,7 +46,8 @@ def handler(event: dict, context) -> dict:
             return {
                 'statusCode': 500,
                 'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-                'body': json.dumps({'error': 'SMTP не настроен'})
+                'body': json.dumps({'error': 'SMTP не настроен', 'debug': 'Пароль не найден в переменных окружения'}, ensure_ascii=False),
+                'isBase64Encoded': False
             }
 
         email_from = 'ooo-eridan_1@mail.ru'
@@ -70,7 +72,7 @@ def handler(event: dict, context) -> dict:
 
         msg.attach(MIMEText(body, 'plain', 'utf-8'))
 
-        server = smtplib.SMTP_SSL('smtp.mail.ru', 465)
+        server = smtplib.SMTP_SSL('smtp.mail.ru', 465, timeout=10)
         server.login(email_from, smtp_password)
         server.send_message(msg)
         server.quit()
@@ -78,12 +80,21 @@ def handler(event: dict, context) -> dict:
         return {
             'statusCode': 200,
             'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-            'body': json.dumps({'success': True, 'message': 'Заявка отправлена'})
+            'body': json.dumps({'success': True, 'message': 'Заявка отправлена'}, ensure_ascii=False),
+            'isBase64Encoded': False
         }
 
+    except smtplib.SMTPAuthenticationError as e:
+        return {
+            'statusCode': 500,
+            'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+            'body': json.dumps({'error': 'Ошибка аутентификации SMTP', 'details': 'Проверьте пароль приложения'}, ensure_ascii=False),
+            'isBase64Encoded': False
+        }
     except Exception as e:
         return {
             'statusCode': 500,
             'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-            'body': json.dumps({'error': str(e)})
+            'body': json.dumps({'error': str(e), 'type': type(e).__name__}, ensure_ascii=False),
+            'isBase64Encoded': False
         }
