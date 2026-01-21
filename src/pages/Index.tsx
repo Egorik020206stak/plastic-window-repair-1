@@ -7,6 +7,10 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import Icon from '@/components/ui/icon';
 import ChatWidget from '@/components/ChatWidget';
 import { Link } from 'react-router-dom';
+import Header from '@/components/home/Header';
+import HeroSection from '@/components/home/HeroSection';
+import MeasurementModal from '@/components/home/MeasurementModal';
+import Footer from '@/components/home/Footer';
 
 const Index = () => {
   const [formData, setFormData] = useState({ name: '', phone: '', message: '' });
@@ -112,73 +116,8 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-slate-50">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b shadow-sm">
-        <div className="container mx-auto px-4 py-4">
-          <nav className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Icon name="Home" className="text-primary" size={32} />
-              <span className="text-2xl font-bold text-primary">ООО "Эридан"</span>
-            </div>
-            <div className="hidden md:flex gap-6">
-              <a href="#services" className="hover:text-primary transition-colors">Услуги</a>
-              <a href="#products" className="hover:text-primary transition-colors">Краска</a>
-              <a href="#portfolio" className="hover:text-primary transition-colors">Портфолио</a>
-              <a href="#about" className="hover:text-primary transition-colors">О нас</a>
-              <a href="#faq" className="hover:text-primary transition-colors">FAQ</a>
-              <a href="#contacts" className="hover:text-primary transition-colors">Контакты</a>
-            </div>
-            <Button className="bg-secondary hover:bg-secondary/90" onClick={() => alert('📞 Позвонить нам:\n\n+7 (902) 145-49-42\nАнастасия\nОфис')}>
-              <Icon name="Phone" size={18} className="mr-2" />
-              Позвонить
-            </Button>
-          </nav>
-        </div>
-      </header>
-
-      {/* Hero Section */}
-      <section className="relative py-32 md:py-40 overflow-hidden">
-        <div 
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://cdn.poehali.dev/projects/91022207-6de8-4436-b8df-267fcf1224c7/files/8dad1c72-f4b8-4e8b-afe7-05a32c62919f.jpg')`,
-          }}
-        />
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-3xl mx-auto text-center text-white">
-            <h1 className="text-5xl md:text-7xl font-bold leading-tight mb-6 animate-fade-in">
-              ООО "Эридан"
-            </h1>
-            <p className="text-2xl md:text-3xl mb-8 animate-fade-in">
-              Пластиковые окна, краска и строительные работы
-            </p>
-            <p className="text-xl mb-10 text-slate-200 animate-slide-up">
-              Профессиональная установка и ремонт пластиковых окон с 2020 года
-            </p>
-            <div className="flex flex-wrap gap-4 justify-center animate-slide-up">
-              <Button 
-                size="lg" 
-                className="bg-primary hover:bg-primary/90 text-lg px-8"
-                onClick={() => setShowMeasurementModal(true)}
-              >
-                Заказать замер
-              </Button>
-
-            </div>
-            <div className="flex flex-wrap gap-8 justify-center pt-12">
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 min-w-[140px]">
-                <div className="text-4xl font-bold">500+</div>
-                <div className="text-sm text-slate-200">Довольных клиентов</div>
-              </div>
-
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 min-w-[140px]">
-                <div className="text-4xl font-bold">24/7</div>
-                <div className="text-sm text-slate-200">Поддержка клиентов</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <Header />
+      <HeroSection onMeasurementClick={() => setShowMeasurementModal(true)} />
 
       {/* Services */}
       <section id="services" className="py-20 bg-white">
@@ -451,110 +390,9 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-slate-900 text-white py-12">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div>
-              <div className="flex items-center gap-2 mb-4">
-                <Icon name="Home" size={28} />
-                <span className="text-xl font-bold">ООО "Эридан"</span>
-              </div>
-              <p className="text-slate-400">Профессиональная установка и ремонт пластиковых окон с 2020 года</p>
-            </div>
-            <div>
-              <h3 className="font-bold mb-4">Услуги</h3>
-              <ul className="space-y-2 text-slate-400">
-                <li><a href="#services" className="hover:text-white transition-colors">Установка окон</a></li>
-                <li><a href="#services" className="hover:text-white transition-colors">Замена окон</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-bold mb-4">Разделы</h3>
-              <ul className="space-y-2 text-slate-400">
-                <li><a href="#products" className="hover:text-white transition-colors">Краска Саяночка</a></li>
-                <li><a href="#about" className="hover:text-white transition-colors">О нас</a></li>
-                <li><a href="#portfolio" className="hover:text-white transition-colors">Портфолио</a></li>
-                <li><a href="#faq" className="hover:text-white transition-colors">FAQ</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-bold mb-4">Контакты</h3>
-              <ul className="space-y-2 text-slate-400">
-                <li>+7 950 130 7721 Ремонт и строительство</li>
-                <li>8 (902) 145-49-42 Офис</li>
-                <li>8 (908) 654-95-25 Директор</li>
-                <li>ooo-eridan_1@mail.ru</li>
-                <li>steklo_master38@mail.ru</li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-slate-800 mt-8 pt-8 text-center text-slate-400">
-            <p>&copy; 2020-2025 ООО "Эридан". Все права защищены.</p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
       <ChatWidget />
-      
-      {showMeasurementModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setShowMeasurementModal(false)}>
-          <Card className="w-full max-w-md" onClick={(e) => e.stopPropagation()}>
-            <CardHeader>
-              <div className="flex justify-between items-start">
-                <div>
-                  <CardTitle className="text-2xl mb-2">Заказать замер</CardTitle>
-                  <CardDescription>Свяжитесь с нами для замера окон</CardDescription>
-                </div>
-                <button onClick={() => setShowMeasurementModal(false)} className="text-muted-foreground hover:text-foreground">
-                  <Icon name="X" size={24} />
-                </button>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="bg-primary/10 p-4 rounded-lg">
-                <div className="flex items-center gap-3 mb-2">
-                  <Icon name="Phone" className="text-primary" size={24} />
-                  <a href="tel:+79501307721" className="text-2xl font-bold text-primary hover:underline">
-                    +7 950 130 7721
-                  </a>
-                </div>
-                <p className="text-sm text-muted-foreground">Звоните в рабочее время: Пн-Сб 9:00-18:00</p>
-              </div>
-              
-              <div className="space-y-4">
-                <h3 className="font-bold text-lg">Расценки на замер:</h3>
-                <div className="space-y-3">
-                  <div className="flex items-start gap-3 p-3 bg-slate-50 rounded-lg">
-                    <Icon name="MapPin" className="text-primary mt-1" size={20} />
-                    <div>
-                      <div className="font-semibold">По городу</div>
-                      <div className="text-2xl font-bold text-primary">200 ₽</div>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3 p-3 bg-slate-50 rounded-lg">
-                    <Icon name="Map" className="text-primary mt-1" size={20} />
-                    <div>
-                      <div className="font-semibold">За городом</div>
-                      <div className="text-2xl font-bold text-primary">от 500 ₽</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <Button 
-                size="lg" 
-                className="w-full"
-                onClick={() => {
-                  window.location.href = 'tel:+79501307721';
-                }}
-              >
-                <Icon name="Phone" size={20} className="mr-2" />
-                Позвонить сейчас
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-      )}
+      <MeasurementModal isOpen={showMeasurementModal} onClose={() => setShowMeasurementModal(false)} />
     </div>
   );
 };
