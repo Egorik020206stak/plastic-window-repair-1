@@ -7,6 +7,7 @@ import Icon from '@/components/ui/icon';
 import GalleryManager from '@/components/admin/GalleryManager';
 import MaterialsManager from '@/components/admin/MaterialsManager';
 import PaintsManager from '@/components/admin/PaintsManager';
+import SiteContentManager from '@/components/admin/SiteContentManager';
 
 interface Message {
   id: string;
@@ -221,7 +222,7 @@ const Admin = () => {
 
       <div className="container mx-auto p-4">
         <Tabs defaultValue="chats" className="w-full">
-          <TabsList className="grid w-full grid-cols-4 mb-6">
+          <TabsList className="grid w-full grid-cols-5 mb-6">
             <TabsTrigger value="chats" className="flex items-center gap-2">
               <Icon name="MessageSquare" size={16} />
               Чаты
@@ -230,6 +231,10 @@ const Admin = () => {
                   {unreadCount}
                 </span>
               )}
+            </TabsTrigger>
+            <TabsTrigger value="content" className="flex items-center gap-2">
+              <Icon name="FileText" size={16} />
+              Контент сайта
             </TabsTrigger>
             <TabsTrigger value="gallery" className="flex items-center gap-2">
               <Icon name="Image" size={16} />
@@ -397,6 +402,10 @@ const Admin = () => {
             )}
           </Card>
         </div>
+          </TabsContent>
+
+          <TabsContent value="content">
+            <SiteContentManager />
           </TabsContent>
 
           <TabsContent value="gallery">

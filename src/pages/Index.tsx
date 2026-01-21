@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -12,11 +12,73 @@ import HeroSection from '@/components/home/HeroSection';
 import MeasurementModal from '@/components/home/MeasurementModal';
 import Footer from '@/components/home/Footer';
 
-const Index = () => {
-  const [formData, setFormData] = useState({ name: '', phone: '', message: '' });
-  const [showMeasurementModal, setShowMeasurementModal] = useState(false);
+interface SiteContent {
+  hero: {
+    title: string;
+    subtitle: string;
+    description: string;
+    backgroundImage: string;
+    stats: { value: string; label: string }[];
+  };
+  services: {
+    icon: string;
+    title: string;
+    description: string;
+    link?: string;
+  }[];
+  products: {
+    name: string;
+    price: string;
+    description: string;
+  }[];
+  portfolio: {
+    image: string;
+    title: string;
+    description: string;
+    link: string;
+  }[];
+  faqs: {
+    question: string;
+    answer: string;
+  }[];
+  about: {
+    title: string;
+    mission: string;
+    sections: {
+      title: string;
+      content: string;
+      items: string[];
+    }[];
+    values: {
+      icon: string;
+      title: string;
+      description: string;
+    }[];
+  };
+  contacts: {
+    phones: { number: string; label: string }[];
+    emails: string[];
+    address: {
+      region: string;
+      city: string;
+      street: string;
+    };
+    workingHours: string;
+  };
+}
 
-  const services = [
+const defaultContent: SiteContent = {
+  hero: {
+    title: 'ООО "Эридан"',
+    subtitle: 'Пластиковые окна, краска и строительные работы',
+    description: 'Профессиональная установка и ремонт пластиковых окон с 2020 года',
+    backgroundImage: 'https://cdn.poehali.dev/projects/91022207-6de8-4436-b8df-267fcf1224c7/files/8dad1c72-f4b8-4e8b-afe7-05a32c62919f.jpg',
+    stats: [
+      { value: '500+', label: 'Довольных клиентов' },
+      { value: '24/7', label: 'Поддержка клиентов' }
+    ]
+  },
+  services: [
     {
       icon: 'Home',
       title: 'Установка окон',
@@ -26,70 +88,124 @@ const Index = () => {
     {
       icon: 'Wrench',
       title: 'Замена окон',
-      description: 'Быстрая и качественная замена старых окон на новые',
+      description: 'Быстрая и качественная замена старых окон на новые'
     },
     {
       icon: 'Settings',
       title: 'Ремонт окон',
       description: 'Замена фурнитуры, изготовление и замена стеклопакетов',
       link: '/window-repair'
-    },
-  ];
-
-  const products = [
+    }
+  ],
+  products: [
     {
       name: 'Эмаль «Саяночка»',
       price: 'Уточняйте цену',
-      description: 'Эмалевые краски для внутренних и наружных работ',
+      description: 'Эмалевые краски для внутренних и наружных работ'
     },
     {
       name: 'Грунтовка «Саяночка»',
       price: 'Уточняйте цену',
-      description: 'Грунтовка для подготовки поверхностей перед покраской',
+      description: 'Грунтовка для подготовки поверхностей перед покраской'
     },
     {
       name: 'Пропитка «Саяночка»',
       price: 'Уточняйте цену',
-      description: 'Защитная пропитка для деревянных поверхностей',
+      description: 'Защитная пропитка для деревянных поверхностей'
     },
     {
       name: 'Потолочная краска «Саяночка»',
       price: 'Уточняйте цену',
-      description: 'Специальная краска для потолков с высокой укрывистостью',
-    },
-  ];
-
-  const portfolio = [
+      description: 'Специальная краска для потолков с высокой укрывистостью'
+    }
+  ],
+  portfolio: [
     {
       image: 'https://cdn.poehali.dev/projects/91022207-6de8-4436-b8df-267fcf1224c7/files/8dad1c72-f4b8-4e8b-afe7-05a32c62919f.jpg',
       title: 'Установка окон',
       description: 'Комплексная замена всех окон',
       link: '/gallery'
     },
-
     {
       image: 'https://cdn.poehali.dev/projects/91022207-6de8-4436-b8df-267fcf1224c7/files/55796747-f555-43c5-83af-fe1b84e6f09d.jpg',
       title: 'Качественные материалы',
       description: 'Профессиональные краски и долговечный результат',
       link: '/materials'
-    },
-  ];
-
-  const faqs = [
-
+    }
+  ],
+  faqs: [
     {
       question: 'Сколько времени занимает установка одного окна?',
-      answer: 'В среднем установка одного стандартного окна занимает 2-3 часа с учетом подготовки и уборки.',
+      answer: 'В среднем установка одного стандартного окна занимает 2-3 часа с учетом подготовки и уборки.'
     },
     {
       question: 'Какие краски вы используете?',
-      answer: 'Мы работаем только с профессиональными красками для ПВХ и дерева ведущих европейских производителей.',
+      answer: 'Мы работаем только с профессиональными красками для ПВХ и дерева ведущих европейских производителей.'
     },
     {
       question: 'Сколько стоит выезд на замер?',
-      answer: 'Выезд замерщика по городу — 200 рублей, загород — от 500 рублей.',
+      answer: 'Выезд замерщика по городу — 200 рублей, загород — от 500 рублей.'
+    }
+  ],
+  about: {
+    title: 'О нас',
+    mission: 'Наша основная миссия заключается в том, чтобы создавать комфортные и безопасные условия для работы реализуя проекты как для частных клиентов, так и для муниципальных учреждений.',
+    sections: [
+      {
+        title: 'Наши услуги',
+        content: 'Мы работаем с:',
+        items: [
+          'Частными клиентами: Предлагаем индивидуальные решения, которые соответствуют уникальным потребностям и требованиям каждого заказчика.',
+          'Муниципальными учреждениями: Сотрудничаем с образовательными, медицинскими и культурными учреждениями, предоставляя качественные услуги и товары, соответствующие современным стандартам.',
+          'Организациями: Обеспечиваем предприятия всем необходимым для эффективного и безопасного функционирования.'
+        ]
+      }
+    ],
+    values: [
+      {
+        icon: 'Users',
+        title: 'Профессионализм',
+        description: 'Опытные специалисты с квалифицированной поддержкой'
+      },
+      {
+        icon: 'Heart',
+        title: 'Индивидуальный подход',
+        description: 'Учитываем все пожелания и предложения клиентов'
+      },
+      {
+        icon: 'ShieldCheck',
+        title: 'Надежность',
+        description: 'Строгий контроль качества каждого проекта'
+      }
+    ]
+  },
+  contacts: {
+    phones: [
+      { number: '+7 950 130 7721', label: 'Ремонт и строительство' },
+      { number: '8 (902) 145-49-42', label: 'Офис' },
+      { number: '8 (908) 654-95-25', label: 'Директор' }
+    ],
+    emails: ['ooo-eridan_1@mail.ru', 'steklo_master38@mail.ru'],
+    address: {
+      region: 'Иркутская область',
+      city: 'г. Саянск',
+      street: 'мкр Олимпийский, дом 18'
     },
-  ];
+    workingHours: 'Пн-Пт: 9:00 - 17:00'
+  }
+};
+
+const Index = () => {
+  const [formData, setFormData] = useState({ name: '', phone: '', message: '' });
+  const [showMeasurementModal, setShowMeasurementModal] = useState(false);
+  const [content, setContent] = useState<SiteContent>(defaultContent);
+
+  useEffect(() => {
+    const stored = localStorage.getItem('site_content');
+    if (stored) {
+      setContent(JSON.parse(stored));
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -127,7 +243,7 @@ const Index = () => {
             <p className="text-xl text-muted-foreground">Полный спектр работ с пластиковыми окнами</p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
-            {services.map((service, index) => (
+            {content.services.map((service, index) => (
               <Card key={index} className="hover:shadow-xl transition-shadow border-2 hover:border-primary">
                 <CardHeader>
                   <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
@@ -170,7 +286,7 @@ const Index = () => {
             </Link>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {products.map((product, index) => (
+            {content.products.map((product, index) => (
               <Card key={index} className="hover:shadow-xl transition-shadow">
                 <CardHeader>
                   <div className="w-full h-48 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-lg mb-4 flex items-center justify-center">
@@ -202,7 +318,7 @@ const Index = () => {
             <p className="text-xl text-muted-foreground">Примеры выполненных проектов</p>
           </div>
           <div className="grid md:grid-cols-2 gap-8">
-            {portfolio.map((item, index) => (
+            {content.portfolio.map((item, index) => (
               <Link key={index} to={item.link}>
                 <Card className="overflow-hidden hover:shadow-xl transition-shadow group cursor-pointer">
                   <div className="relative overflow-hidden">
@@ -228,22 +344,24 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="max-w-5xl mx-auto">
             <div className="text-center mb-12">
-              <h2 className="text-4xl font-bold mb-6">О нас</h2>
+              <h2 className="text-4xl font-bold mb-6">{content.about.title}</h2>
               <p className="text-xl text-muted-foreground mb-4">
-                Наша основная миссия заключается в том, чтобы создавать комфортные и безопасные условия для работы реализуя проекты как для частных клиентов, так и для муниципальных учреждений.
+                {content.about.mission}
               </p>
             </div>
             
             <div className="prose prose-lg max-w-none mb-12 text-left">
-
-              
-              <h3 className="text-2xl font-bold mb-4 text-foreground">Наши услуги</h3>
-              <p className="text-base text-muted-foreground mb-4">Мы работаем с:</p>
-              <ul className="space-y-3 mb-8 text-muted-foreground">
-                <li><strong className="text-foreground">Частными клиентами:</strong> Предлагаем индивидуальные решения, которые соответствуют уникальным потребностям и требованиям каждого заказчика.</li>
-                <li><strong className="text-foreground">Муниципальными учреждениями:</strong> Сотрудничаем с образовательными, медицинскими и культурными учреждениями, предоставляя качественные услуги и товары, соответствующие современным стандартам.</li>
-                <li><strong className="text-foreground">Организациями:</strong> Обеспечиваем предприятия всем необходимым для эффективного и безопасного функционирования.</li>
-              </ul>
+              {content.about.sections.map((section, index) => (
+                <div key={index}>
+                  <h3 className="text-2xl font-bold mb-4 text-foreground">{section.title}</h3>
+                  <p className="text-base text-muted-foreground mb-4">{section.content}</p>
+                  <ul className="space-y-3 mb-8 text-muted-foreground">
+                    {section.items.map((item, i) => (
+                      <li key={i}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
               
               <h3 className="text-2xl font-bold mb-4 text-foreground">Сертификация</h3>
               <p className="text-base text-muted-foreground leading-relaxed mb-8">
@@ -252,21 +370,13 @@ const Index = () => {
             </div>
 
             <div className="grid md:grid-cols-3 gap-8">
-              <div className="p-6 bg-white rounded-xl shadow-md">
-                <Icon name="Users" className="text-primary mx-auto mb-4" size={48} />
-                <h3 className="font-bold text-xl mb-2">Профессионализм</h3>
-                <p className="text-muted-foreground">Опытные специалисты с квалифицированной поддержкой</p>
-              </div>
-              <div className="p-6 bg-white rounded-xl shadow-md">
-                <Icon name="Heart" className="text-primary mx-auto mb-4" size={48} />
-                <h3 className="font-bold text-xl mb-2">Индивидуальный подход</h3>
-                <p className="text-muted-foreground">Учитываем все пожелания и предложения клиентов</p>
-              </div>
-              <div className="p-6 bg-white rounded-xl shadow-md">
-                <Icon name="ShieldCheck" className="text-primary mx-auto mb-4" size={48} />
-                <h3 className="font-bold text-xl mb-2">Надежность</h3>
-                <p className="text-muted-foreground">Строгий контроль качества каждого проекта</p>
-              </div>
+              {content.about.values.map((value, index) => (
+                <div key={index} className="p-6 bg-white rounded-xl shadow-md">
+                  <Icon name={value.icon} className="text-primary mx-auto mb-4" size={48} />
+                  <h3 className="font-bold text-xl mb-2">{value.title}</h3>
+                  <p className="text-muted-foreground">{value.description}</p>
+                </div>
+              ))}
             </div>
             
             <div className="text-center mt-12">
@@ -287,7 +397,7 @@ const Index = () => {
               <p className="text-xl text-muted-foreground">Ответы на популярные вопросы</p>
             </div>
             <Accordion type="single" collapsible className="space-y-4">
-              {faqs.map((faq, index) => (
+              {content.faqs.map((faq, index) => (
                 <AccordionItem key={index} value={`item-${index}`} className="border rounded-lg px-6 bg-slate-50">
                   <AccordionTrigger className="text-lg font-semibold hover:text-primary">
                     {faq.question}
@@ -353,9 +463,11 @@ const Index = () => {
                     </div>
                     <div>
                       <h3 className="font-bold text-lg mb-1">Телефон</h3>
-                      <p className="text-muted-foreground">+7 950 130 7721 Ремонт и строительство</p>
-                      <p className="text-muted-foreground">8 (902) 145-49-42 Офис</p>
-                      <p className="text-muted-foreground">8 (908) 654-95-25 Директор</p>
+                      {content.contacts.phones.map((phone, index) => (
+                        <p key={index} className="text-muted-foreground">
+                          {phone.number} {phone.label}
+                        </p>
+                      ))}
                     </div>
                   </div>
                 </Card>
@@ -366,8 +478,9 @@ const Index = () => {
                     </div>
                     <div>
                       <h3 className="font-bold text-lg mb-1">Email</h3>
-                      <p className="text-muted-foreground">ooo-eridan_1@mail.ru</p>
-                      <p className="text-muted-foreground">steklo_master38@mail.ru</p>
+                      {content.contacts.emails.map((email, index) => (
+                        <p key={index} className="text-muted-foreground">{email}</p>
+                      ))}
                     </div>
                   </div>
                 </Card>
@@ -378,9 +491,9 @@ const Index = () => {
                     </div>
                     <div>
                       <h3 className="font-bold text-lg mb-1">Адрес и режим работы</h3>
-                      <p className="text-muted-foreground">Иркутская область</p>
-                      <p className="text-muted-foreground">г. Саянск, мкр Олимпийский, дом 18</p>
-                      <p className="text-muted-foreground font-semibold mt-2">Пн-Пт: 9:00 - 17:00</p>
+                      <p className="text-muted-foreground">{content.contacts.address.region}</p>
+                      <p className="text-muted-foreground">{content.contacts.address.city}, {content.contacts.address.street}</p>
+                      <p className="text-muted-foreground font-semibold mt-2">{content.contacts.workingHours}</p>
                     </div>
                   </div>
                 </Card>
