@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import Icon from '@/components/ui/icon';
+import ImageUploader from './ImageUploader';
 
 interface GalleryImage {
   id: string;
@@ -15,7 +16,6 @@ interface GalleryImage {
 const GalleryManager = () => {
   const [images, setImages] = useState<GalleryImage[]>([]);
   const [newImage, setNewImage] = useState({ url: '', title: '', description: '' });
-  const [editing, setEditing] = useState<string | null>(null);
 
   useEffect(() => {
     const storedImages = localStorage.getItem('gallery_images');
@@ -31,7 +31,7 @@ const GalleryManager = () => {
 
   const handleAdd = () => {
     if (!newImage.url || !newImage.title) {
-      alert('Заполните URL и название');
+      alert('Загрузите фото и укажите название');
       return;
     }
 
@@ -57,10 +57,9 @@ const GalleryManager = () => {
           <CardTitle>Добавить новое фото</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <Input
-            placeholder="URL изображения"
+          <ImageUploader
             value={newImage.url}
-            onChange={(e) => setNewImage({ ...newImage, url: e.target.value })}
+            onChange={(url) => setNewImage({ ...newImage, url })}
           />
           <Input
             placeholder="Название"
@@ -72,7 +71,7 @@ const GalleryManager = () => {
             value={newImage.description}
             onChange={(e) => setNewImage({ ...newImage, description: e.target.value })}
           />
-          <Button onClick={handleAdd} className="w-full">
+          <Button onClick={handleAdd} className="w-full" disabled={!newImage.url || !newImage.title}>
             <Icon name="Plus" size={18} className="mr-2" />
             Добавить фото
           </Button>
