@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
-import func2url from '@/../func2url.json';
+import func2url from '@/../backend/func2url.json';
 
 interface ImageUploaderProps {
   value: string;
